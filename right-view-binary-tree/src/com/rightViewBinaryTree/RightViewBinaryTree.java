@@ -43,6 +43,11 @@ public class RightViewBinaryTree {
         LinkedList<TreeNode> tmp_queue; //used for swapping current and next queue
         TreeNode current_node = head;
 
+        //fast fail
+        if(head == null) {
+            return result;
+        }
+
         result.add(head._value);
 
         while(true) {
