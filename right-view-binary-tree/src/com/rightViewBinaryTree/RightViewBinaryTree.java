@@ -3,6 +3,8 @@ import java.util.*;
 
 public class RightViewBinaryTree {
 
+    private static final String ILLEGAL_ARG_MSG = "Arguments must not be null.";
+
     public static class TreeNode {
         public TreeNode _left = null;
         public TreeNode _right = null;
@@ -21,7 +23,7 @@ public class RightViewBinaryTree {
 
     private static TreeNode pullFromQueue(LinkedList<TreeNode> queue, ArrayList<Integer> result) {
         if(queue == null || result == null) {
-            throw new IllegalArgumentException("Parameters must not be null.");
+            throw new IllegalArgumentException(ILLEGAL_ARG_MSG);
         }
 
         TreeNode next_node = null;
@@ -29,11 +31,17 @@ public class RightViewBinaryTree {
         if(queue_size > 0) {
             next_node = queue.poll();
             if(queue_size == 1) {
-                result.add(next_node._value);
+                addToResult(next_node, result);
             }
         }
 
         return next_node;
+    }
+
+    private static void addToResult(TreeNode node, ArrayList<Integer> result) {
+        if(node != null && result != null) {
+            result.add(node._value);
+        }
     }
 
     public static ArrayList<Integer> getRightView(TreeNode head) {
@@ -43,14 +51,9 @@ public class RightViewBinaryTree {
         LinkedList<TreeNode> tmp_queue; //used for swapping current and next queue
         TreeNode current_node = head;
 
-        //fast fail
-        if(head == null) {
-            return result;
-        }
+        addToResult(current_node, result);
 
-        result.add(head._value);
-
-        while(true) {
+        while(current_node != null) {
             addToQueue(current_node._left, next_queue);
             addToQueue(current_node._right, next_queue);
 
@@ -60,9 +63,7 @@ public class RightViewBinaryTree {
                 tmp_queue = current_queue;
                 current_queue = next_queue;
                 next_queue = tmp_queue;
-                if( (current_node = pullFromQueue(current_queue, result)) == null) {
-                    break;
-                }
+                current_node = pullFromQueue(current_queue, result);
             }
         }
 
@@ -70,7 +71,9 @@ public class RightViewBinaryTree {
     }
 
     private static void assertResults(ArrayList<Integer> expected, ArrayList<Integer> actual) {
-        if (expected.size() != actual.size()) {
+        if(expected == null || actual == null) {
+            throw new IllegalArgumentException(ILLEGAL_ARG_MSG);
+        }else if (expected.size() != actual.size()) {
             assert false;
         } else {
             for (int i = 0; i < expected.size(); i++) {
