@@ -99,6 +99,7 @@ public class RightViewBinaryTree {
         ArrayList<Integer> actual = getRightView(head);
         assertResults(expected, actual);
 
-        System.out.println("Execution finished.");
+        System.out.println("Expected : " + expected.toString());
+        System.out.println("Actual   : " + actual.toString());
     }
 }
